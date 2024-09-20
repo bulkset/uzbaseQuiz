@@ -54,7 +54,7 @@ CREATE TABLE results (
 ```
 ## Folder structure
 
-
+```
 /QuizBot
 │
 ├─── /Controllers # Processing bot commands
@@ -96,3 +96,4 @@ CREATE TABLE results (
 │ ├─── BotConfiguration.cs # Bot token configuration
 │
 └─── Program.cs # Entry point
+```
