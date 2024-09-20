@@ -62,7 +62,6 @@ CREATE TABLE results (
 ├─── /Controllers # Processing bot commands
 │ ├──── AdminController.cs # Admin Commands
 │ ├─── UserController.cs # User commands
-│ ├──── CommandController.cs # General Commands
 │
 ├─── /Handlers # Handle messages and inline buttons
 │ ├──── UpdateHandler.Message.cs # Text message processing logic
