@@ -2,12 +2,14 @@
 
 ```
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,                  
+    id SERIAL PRIMARY KEY,        
+    user_id BIGINT NOT NULL,  
     name VARCHAR(100) NOT NULL,             
     phone VARCHAR(15) NOT NULL,             
     role VARCHAR(10) CHECK (role IN ('admin', 'user')) NOT NULL, 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 CREATE TABLE subjects (
     id SERIAL PRIMARY KEY,                 
