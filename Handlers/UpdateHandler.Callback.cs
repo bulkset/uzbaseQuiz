@@ -1,6 +1,5 @@
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using uzbaseQuiz.Services;
 namespace uzbaseQuiz.Handlers
 {
     public partial class UpdateHandler

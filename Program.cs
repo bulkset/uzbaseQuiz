@@ -10,11 +10,14 @@ namespace uzbaseQuiz
         {
             var client = new TelegramBotClient(Configuration.BotToken);
             var updateHandler = new UpdateHandler(client);
-            
-            client.StartReceiving(updateHandler: updateHandler.UpdateHandlerAsync,
-            pollingErrorHandler: updateHandler.HandleErrorAsync);
 
-            Console.ReadLine();
+            client.StartReceiving(
+                updateHandler.UpdateHandlerAsync,  // Handler for updates (messages, commands, etc.)
+                updateHandler.HandleErrorAsync     // Handler for errors
+            );
+
+            Console.WriteLine("Bot is running. Press any key to exit...");
+            Console.ReadLine(); // Keeps the application alive
         }
     }
 }

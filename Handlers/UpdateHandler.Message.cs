@@ -1,5 +1,8 @@
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
+using uzbaseQuiz.Repositories;
+using uzbaseQuiz.Configurations;
+using uzbaseQuiz.Models;
 
 namespace uzbaseQuiz.Handlers
 {
@@ -27,13 +30,20 @@ namespace uzbaseQuiz.Handlers
 
         private async Task HandleStartCommandAsync(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            long chatId = update.Message.Chat.Id;
+
+            string introMessage = "Welcome to the Quiz Bot! 🎉\nGet ready to test your knowledge.";
+            await client.SendTextMessageAsync(chatId, introMessage);
+            IUserRepository userRepository = new UserRepository(Configuration.ConnectionString);
+            BotUser user = await userRepository.FindUserById(chatId);
+            System.Console.WriteLine("checking out");
+            System.Console.WriteLine(user.Name);
         }
+        
 
         private async Task HandleStatisticsCommandAsync(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
-
     }
 }

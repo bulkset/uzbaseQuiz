@@ -1,26 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "/Users/chupapa/Documents/vscode/uzbaseQuiz/uzbaseQuiz.csproj": {}
+    "C:\\Users\\user\\source\\repos\\uzbaseQuiz\\uzbaseQuiz.csproj": {}
   },
   "projects": {
-    "/Users/chupapa/Documents/vscode/uzbaseQuiz/uzbaseQuiz.csproj": {
+    "C:\\Users\\user\\source\\repos\\uzbaseQuiz\\uzbaseQuiz.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/chupapa/Documents/vscode/uzbaseQuiz/uzbaseQuiz.csproj",
+        "projectUniqueName": "C:\\Users\\user\\source\\repos\\uzbaseQuiz\\uzbaseQuiz.csproj",
         "projectName": "uzbaseQuiz",
-        "projectPath": "/Users/chupapa/Documents/vscode/uzbaseQuiz/uzbaseQuiz.csproj",
-        "packagesPath": "/Users/chupapa/.nuget/packages/",
-        "outputPath": "/Users/chupapa/Documents/vscode/uzbaseQuiz/obj/",
+        "projectPath": "C:\\Users\\user\\source\\repos\\uzbaseQuiz\\uzbaseQuiz.csproj",
+        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\user\\source\\repos\\uzbaseQuiz\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/chupapa/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "https://api.nuget.org/v3/index.json": {}
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.voids.site/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
@@ -43,9 +47,13 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Npgsql": {
+              "target": "Package",
+              "version": "[8.0.4, )"
+            },
             "Telegram.Bot": {
               "target": "Package",
-              "version": "[19.0.0, )"
+              "version": "[21.11.0, )"
             }
           },
           "imports": [
@@ -64,7 +72,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

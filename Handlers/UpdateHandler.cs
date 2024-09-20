@@ -1,7 +1,6 @@
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using uzbaseQuiz.Services;
 
 namespace uzbaseQuiz.Handlers
 {
