@@ -1,8 +1,10 @@
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
+using uzbaseQuiz.Configurations;
 using uzbaseQuiz.Keyboards;
 using uzbaseQuiz.Repositories;
+using uzbaseQuiz.Models;
 namespace uzbaseQuiz.Handlers
 {
     public partial class UpdateHandler
@@ -18,7 +20,7 @@ namespace uzbaseQuiz.Handlers
         {
             var data = update.CallbackQuery.Data;
             long chatId = update.CallbackQuery.Message.Chat.Id;
-
+            ISubjectRepository subjectRepository = new SubjectRepository(Configuration.ConnectionString);
             switch (data)
             {
                 case "export_users_excel":
@@ -40,7 +42,7 @@ namespace uzbaseQuiz.Handlers
                     break;
                 case "edit_subject":
                     var subjects = await subjectRepository.GetAllSubjectsAsync();
-                    if (subjects != null && subjectRepository.Count > 0)
+                    if (subjects != null)
                     {
                         var keyboard = new InlineKeyboardMarkup(subjects.Select(s => InlineKeyboardButton.WithCallbackData(s.Name, $"edit_subject_{s.Id}")));
                         await client.SendTextMessageAsync(chatId, "Edit a subject:", replyMarkup: keyboard);
@@ -83,7 +85,7 @@ namespace uzbaseQuiz.Handlers
             if (data.StartsWith("edit_subject_"))
             {
                 var subjectId = int.Parse(data.Split('_')[2]);
-                var subject = await subjectRepository.FindSubjectById(subjectId);
+                Subject subject = await subjectRepository.FindSubjectById(subjectId);
                 if (subject != null)
                 {
                     await client.SendTextMessageAsync(chatId, "Enter a new item name:", replyMarkup: new ForceReplyMarkup { Selective = true });
@@ -96,7 +98,7 @@ namespace uzbaseQuiz.Handlers
             else if (data.StartsWith("delete_subject_"))
             {
                 var subjectId = int.Parse(data.Split('_')[2]);
-                var subject = await subjectRepository.FindSubjectById(subjectId);
+                Subject subject = await subjectRepository.FindSubjectById(subjectId);
                 if (subject != null)
                 {
                     await client.SendTextMessageAsync(chatId, $"Are you sure you want to delete the item? '{subject.Name}'?", replyMarkup: new InlineKeyboardMarkup(new[]

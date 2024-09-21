@@ -4,6 +4,7 @@ using uzbaseQuiz.Repositories;
 using uzbaseQuiz.Configurations;
 using uzbaseQuiz.Models;
 using uzbaseQuiz.Keyboards;
+using System.Security.Cryptography.X509Certificates;
 
 namespace uzbaseQuiz.Handlers
 {
@@ -13,6 +14,7 @@ namespace uzbaseQuiz.Handlers
         private async Task HandleMessageAsync(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
 
         {
+            ISubjectRepository subjectRepository = new SubjectRepository(Configuration.ConnectionString);
 
             var message = update.Message;
             var chatId = message.Chat.Id;
@@ -29,28 +31,33 @@ namespace uzbaseQuiz.Handlers
                 if (message.ReplyToMessage != null && message.ReplyToMessage.Text.Contains("Add a new subject:"))
                 {
                     var subjectName = message.Text;
-                    ISubjectRepository subjectRepository = new ISubjectRepository(Configuration.ConnectionString);
                     // TODO: Get max score
                     var newSubject = new Subject { Name = subjectName, MaxScore = 100 };
                     Subject subject = await subjectRepository.SaveSubject(newSubject);
                     await client.SendTextMessageAsync(chatId, $"Subject '{subjectName}' added.");
                 }
-                else if (message.ReplyToMessage != null && message.ReplyToMessage.Text.Contains("Enter a new item name:"))
+                else if (message.ReplyToMessage != null)
                 {
-                    var newSubjectName = message.Text;
-                    var subjectId = int.Parse(message.ReplyToMessage.Text.Split('_')[2]);
-                    var subject = await subjectRepository.FindSubjectById(subjectId);
-                    if (subject != null)
+                    var previousMessageText = message.ReplyToMessage.Text;
+
+                    if (previousMessageText.Contains("Enter a new item name:"))
                     {
-                        subject.Name = newSubjectName;
-                        await subjectRepository.UpdateSubject(subject);
-                        await client.SendTextMessageAsync(chatId, $"Subject '{subject.Name}' updated successfully.");
-                    }
-                    else
-                    {
-                        await client.SendTextMessageAsync(chatId, $"Subject with ID {subjectId} not found.");
+                        var newSubjectName = message.Text;
+                        var subjectId = int.Parse(previousMessageText.Split(' ')[^1]); // здесь предполагается, что ID был добавлен в текст
+                        Subject subject = await subjectRepository.FindSubjectById(subjectId);
+                        if (subject != null)
+                        {
+                            subject.Name = newSubjectName;
+                            await subjectRepository.UpdateSubject(subject);
+                            await client.SendTextMessageAsync(chatId, $"Subject '{subject.Name}' updated successfully.");
+                        }
+                        else
+                        {
+                            await client.SendTextMessageAsync(chatId, $"Subject with ID {subjectId} not found.");
+                        }
                     }
                 }
+
                 await messageHandler;
             }
             catch (Exception ex)
@@ -65,7 +72,8 @@ namespace uzbaseQuiz.Handlers
         {
             long chatId = update.Message.Chat.Id;
             // TODO: Add logic to check if the user is an admin
-            await client.SendTextMessageAsync(chatId, "Welcome to the Admin Panel!", replyMarkup: AdminKeyboard.GetAdminMenu());
+            await client.SendTextMessageAsync(chatId, @$"Welcome, Admin {update.Message.From.FirstName}! 🌟
+Please choose an option below:", replyMarkup: AdminKeyboard.GetAdminMenu());
         }
 
         private async Task HandleStartCommandAsync(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
