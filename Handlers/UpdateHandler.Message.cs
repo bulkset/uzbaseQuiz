@@ -23,36 +23,39 @@ namespace uzbaseQuiz.Handlers
 
             try
             {
+                if (message.ReplyToMessage != null && message.ReplyToMessage.Text.Contains("Add a new subject:"))
+                {
+                    await client.SendTextMessageAsync(chatId, "345353");
+                    var subjectName = message.Text;
+                    // TODO: Get max score
+                    var newSubject = new Subject { Name = subjectName, MaxScore = 100 };
+                    await _subjectRepository.SaveSubject(newSubject);
+                    await client.SendTextMessageAsync(chatId, $"Subject '{subjectName}' added.");
+                }
+                else if (message.ReplyToMessage != null && message.ReplyToMessage.Text.Contains("Enter a new item name:"))
+                {
+                    var newSubjectName = message.Text;
+                    var subjectId = int.Parse(message.ReplyToMessage.Text.Split('_')[2]);
+                    var subject = await _subjectRepository.FindSubjectById(subjectId);
+                    if (subject != null)
+                    {
+                        subject.Name = newSubjectName;
+                        await _subjectRepository.UpdateSubject(subject);
+                        await client.SendTextMessageAsync(chatId, $"Subject '{subject.Name}' updated successfully.");
+                    }
+                    else
+                    {
+                        await client.SendTextMessageAsync(chatId, $"Предмет с ID {subjectId} не найден.");
+                    }
+                }
                 await messageHandler;
             }
             catch (Exception ex)
             {
                 await HandleErrorAsync(client, ex, cancellationToken);
             }
-            if (message.ReplyToMessage != null && message.ReplyToMessage.Text.Contains("Add a new subject:"))
-            {
-                var subjectName = message.Text;
-                // TODO: Get max score
-                var newSubject = new Subject { Name = subjectName, MaxScore = 100 };
-                await _subjectRepository.SaveSubject(newSubject);
-                await client.SendTextMessageAsync(chatId, $"Subject '{subjectName}' added.");
-            }
-            else if (message.ReplyToMessage != null && message.ReplyToMessage.Text.Contains("Enter a new item name:"))
-            {
-                var newSubjectName = message.Text;
-                var subjectId = int.Parse(message.ReplyToMessage.Text.Split('_')[2]);
-                var subject = await _subjectRepository.FindSubjectById(subjectId);
-                if (subject != null)
-                {
-                    subject.Name = newSubjectName;
-                    await _subjectRepository.UpdateSubject(subject);
-                    await client.SendTextMessageAsync(chatId, $"Subject '{subject.Name}' updated successfully.");
-                }
-                else
-                {
-                    await client.SendTextMessageAsync(chatId, $"Предмет с ID {subjectId} не найден.");
-                }
-            }
+            Console.WriteLine(message.ReplyToMessage);
+
         }
 
         private async Task HandleAdminCommandAsync(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
