@@ -7,3 +7,5 @@ obj/uzbaseQuiz.csproj.nuget.g.props
 /bin/Debug
 /bin
 bin/Debug/net8.0/uzbaseQuiz.exe
+obj/Debug/net8.0/uzbaseQuiz.AssemblyInfo.cs
+*.cache
