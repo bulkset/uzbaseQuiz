@@ -9,8 +9,11 @@ namespace uzbaseQuiz.Handlers
 {
     public partial class UpdateHandler
     {
+
         private async Task HandleMessageAsync(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
+
         {
+
             var message = update.Message;
             var chatId = message.Chat.Id;
             var messageHandler = message.Text switch
@@ -25,27 +28,27 @@ namespace uzbaseQuiz.Handlers
             {
                 if (message.ReplyToMessage != null && message.ReplyToMessage.Text.Contains("Add a new subject:"))
                 {
-                    await client.SendTextMessageAsync(chatId, "345353");
                     var subjectName = message.Text;
+                    ISubjectRepository subjectRepository = new ISubjectRepository(Configuration.ConnectionString);
                     // TODO: Get max score
                     var newSubject = new Subject { Name = subjectName, MaxScore = 100 };
-                    await _subjectRepository.SaveSubject(newSubject);
+                    Subject subject = await subjectRepository.SaveSubject(newSubject);
                     await client.SendTextMessageAsync(chatId, $"Subject '{subjectName}' added.");
                 }
                 else if (message.ReplyToMessage != null && message.ReplyToMessage.Text.Contains("Enter a new item name:"))
                 {
                     var newSubjectName = message.Text;
                     var subjectId = int.Parse(message.ReplyToMessage.Text.Split('_')[2]);
-                    var subject = await _subjectRepository.FindSubjectById(subjectId);
+                    var subject = await subjectRepository.FindSubjectById(subjectId);
                     if (subject != null)
                     {
                         subject.Name = newSubjectName;
-                        await _subjectRepository.UpdateSubject(subject);
+                        await subjectRepository.UpdateSubject(subject);
                         await client.SendTextMessageAsync(chatId, $"Subject '{subject.Name}' updated successfully.");
                     }
                     else
                     {
-                        await client.SendTextMessageAsync(chatId, $"Предмет с ID {subjectId} не найден.");
+                        await client.SendTextMessageAsync(chatId, $"Subject with ID {subjectId} not found.");
                     }
                 }
                 await messageHandler;

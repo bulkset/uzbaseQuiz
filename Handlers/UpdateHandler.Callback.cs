@@ -8,7 +8,6 @@ namespace uzbaseQuiz.Handlers
     public partial class UpdateHandler
     {
         private TelegramBotClient client;
-        private ISubjectRepository _subjectRepository;
 
         public UpdateHandler(TelegramBotClient client)
         {
@@ -40,8 +39,8 @@ namespace uzbaseQuiz.Handlers
                     await client.SendTextMessageAsync(chatId, "Add a new subject: ", replyMarkup: new ForceReplyMarkup { Selective = true });
                     break;
                 case "edit_subject":
-                    var subjects = await _subjectRepository.GetAllSubjectsAsync();
-                    if (subjects != null && subjects.Count > 0)
+                    var subjects = await subjectRepository.GetAllSubjectsAsync();
+                    if (subjects != null && subjectRepository.Count > 0)
                     {
                         var keyboard = new InlineKeyboardMarkup(subjects.Select(s => InlineKeyboardButton.WithCallbackData(s.Name, $"edit_subject_{s.Id}")));
                         await client.SendTextMessageAsync(chatId, "Edit a subject:", replyMarkup: keyboard);
@@ -52,7 +51,7 @@ namespace uzbaseQuiz.Handlers
                     }
                     break;
                 case "delete_subject":
-                    var subjectsToDelete = await _subjectRepository.GetAllSubjectsAsync();
+                    var subjectsToDelete = await subjectRepository.GetAllSubjectsAsync();
                     if (subjectsToDelete != null && subjectsToDelete.Count > 0)
                     {
                         var keyboard = new InlineKeyboardMarkup(subjectsToDelete.Select(s => InlineKeyboardButton.WithCallbackData(s.Name, $"delete_subject_{s.Id}")));
@@ -84,7 +83,7 @@ namespace uzbaseQuiz.Handlers
             if (data.StartsWith("edit_subject_"))
             {
                 var subjectId = int.Parse(data.Split('_')[2]);
-                var subject = await _subjectRepository.FindSubjectById(subjectId);
+                var subject = await subjectRepository.FindSubjectById(subjectId);
                 if (subject != null)
                 {
                     await client.SendTextMessageAsync(chatId, "Enter a new item name:", replyMarkup: new ForceReplyMarkup { Selective = true });
@@ -97,7 +96,7 @@ namespace uzbaseQuiz.Handlers
             else if (data.StartsWith("delete_subject_"))
             {
                 var subjectId = int.Parse(data.Split('_')[2]);
-                var subject = await _subjectRepository.FindSubjectById(subjectId);
+                var subject = await subjectRepository.FindSubjectById(subjectId);
                 if (subject != null)
                 {
                     await client.SendTextMessageAsync(chatId, $"Are you sure you want to delete the item? '{subject.Name}'?", replyMarkup: new InlineKeyboardMarkup(new[]

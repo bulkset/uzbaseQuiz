@@ -18,7 +18,7 @@ namespace uzbaseQuiz.Repositories
             var sqlQuery = @"
                 INSERT INTO subjects (name, max_score) 
                 VALUES (@name, @maxScore) 
-                RETURNING id;";
+                RETURNING id;"; 
 
             await using (var command = new NpgsqlCommand(sqlQuery, _npgsqlConnection))
             {
@@ -50,7 +50,7 @@ namespace uzbaseQuiz.Repositories
 
         public async Task<Subject> FindSubjectById(int id)
         {
-            var sqlQuery = @"SELECT * FROM subjects WHERE id = @id";
+            var sqlQuery = @"SELECT * FROM subjects WHERE id = @id"; 
 
             await using (var command = new NpgsqlCommand(sqlQuery, _npgsqlConnection))
             {
@@ -79,7 +79,7 @@ namespace uzbaseQuiz.Repositories
                 catch (Exception ex)
                 {
                     System.Console.WriteLine($"Error executing query: {ex.Message}");
-                    return null;
+                    return null; 
                 }
                 finally
                 {
@@ -93,7 +93,7 @@ namespace uzbaseQuiz.Repositories
 
         public async Task<List<Subject>> GetAllSubjectsAsync()
         {
-            var sqlQuery = @"SELECT * FROM subjects";
+            var sqlQuery = @"SELECT * FROM subjects"; 
 
             await using (var command = new NpgsqlCommand(sqlQuery, _npgsqlConnection))
             {
@@ -120,7 +120,7 @@ namespace uzbaseQuiz.Repositories
                 catch (Exception ex)
                 {
                     System.Console.WriteLine($"Error executing query: {ex.Message}");
-                    return null;
+                    return null; 
                 }
                 finally
                 {
