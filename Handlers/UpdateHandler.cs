@@ -12,6 +12,7 @@ namespace uzbaseQuiz.Handlers
             {
                 UpdateType.Message => HandleMessageAsync(client, update, cancellationToken),
                 UpdateType.CallbackQuery => HandleCallbackQueryAsync(client, update, cancellationToken),
+                
                 _ => HandleUnknownUpdateTypeAsync(client, update, cancellationToken)
             };
 

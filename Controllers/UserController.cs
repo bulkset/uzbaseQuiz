@@ -17,5 +17,4 @@ namespace uzbaseQuiz.Controllers
             // Function to view test results
         }
     }
-
 }

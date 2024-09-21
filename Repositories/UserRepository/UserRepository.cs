@@ -30,43 +30,13 @@ namespace uzbaseQuiz.Repositories
                     throw new Exception("Delete qilish jarayonida kutilmagan xatolik.");
             }
         }
-
-        // public async Task<BotUser> FindUserById(long user_id)
-        // {
-        //      var sqlQuery = @"SELECT * FROM Users WHERE user_id = @user_id";
-
-        //     using (var command = new NpgsqlCommand(sqlQuery, _npgsqlConnection))
-        //     {
-        //         command.Parameters.AddWithValue("@user_id", NpgsqlDbType.Integer, user_id);
-        //         await _npgsqlConnection.OpenAsync();
-        //         var reader = await command.ExecuteReaderAsync();
-
-        //         if (!reader.HasRows)
-        //             throw new Exception($"Job get qilishda xatolik, user_id = {user_id}");
-
-        //         var jobs = new List<BotUser>();
-        //         while (reader.Read())
-        //         {
-        //             jobs.Add(new BotUser()
-        //             {
-        //                 Id = int.Parse(reader["Id"].ToString()),
-        //                 Name = reader["Name"].ToString(),
-        //                 PhoneNumber = reader["PhoneNumber"].ToString(),
-        //                 Role = reader["Role"].ToString(),
-        //                 CreatedAt = DateTime.Parse(reader["CreatedAt"].ToString()),
-        //                 user_id = long.Parse(reader["user_id"].ToString())
-        //             });
-        //         }
-        //         return jobs.FirstOrDefault();
-        //     }
-        // }
         public async Task<BotUser> FindUserById(long user_id)
         {
-            var sqlQuery = @"SELECT * FROM users WHERE user_id = @user_id"; // Use lowercase if your table is defined that way
+            var sqlQuery = @"SELECT * FROM users WHERE user_id = @user_id"; 
 
             await using (var command = new NpgsqlCommand(sqlQuery, _npgsqlConnection))
             {
-                command.Parameters.AddWithValue("@user_id", NpgsqlDbType.Bigint, user_id); // Use Bigint for long
+                command.Parameters.AddWithValue("@user_id", NpgsqlDbType.Bigint, user_id); 
 
                 await _npgsqlConnection.OpenAsync();
                 
@@ -114,10 +84,49 @@ namespace uzbaseQuiz.Repositories
             }
         }
 
-        public Task<List<BotUser>> GetAllAsync()
+        public async Task<List<BotUser>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var sqlQuery = @"SELECT * FROM users;";
+            var users = new List<BotUser>();
+
+            await using (var command = new NpgsqlCommand(sqlQuery, _npgsqlConnection))
+            {
+                await _npgsqlConnection.OpenAsync();
+                try
+                {
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var user = new BotUser
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("id")),
+                                Name = reader.GetString(reader.GetOrdinal("name")),
+                                PhoneNumber = reader.GetString(reader.GetOrdinal("phone")),
+                                Role = reader.GetString(reader.GetOrdinal("role")),
+                                CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
+                                user_id = reader.GetInt64(reader.GetOrdinal("user_id"))
+                            };
+                            users.Add(user);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Console.WriteLine($"Error retrieving users: {ex.Message}");
+                }
+                finally
+                {
+                    if (_npgsqlConnection.State == System.Data.ConnectionState.Open)
+                    {
+                        await _npgsqlConnection.CloseAsync();
+                    }
+                }
+            }
+            return users;
         }
+
+
         
         public async Task<BotUser> SaveUser(BotUser user)
         {

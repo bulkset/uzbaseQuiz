@@ -1,18 +1,26 @@
-using Telegram.Bot.Types.ReplyMarkups;
+using Telegram.Bot;
+using Telegram.Bot.Types;
+using uzbaseQuiz.Models;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace uzbaseQuiz.Keyboards
 {
     public class MainMenuKeyboard
     {
-        public InlineKeyboardMarkup GetMainMenu()
+        public async Task MainMenu(ITelegramBotClient client, Update update, CancellationToken cancellationToken, BotUser user)
         {
-            return new InlineKeyboardMarkup(new[]
-            {
-                new [] { InlineKeyboardButton.WithCallbackData("Start Quiz", "start_quiz") },
-                new [] { InlineKeyboardButton.WithCallbackData("My stats", "view_stats") }
-            });
-        }
+            UserQuizKeyboard userQuizKeyboard = new UserQuizKeyboard();
+            AdminKeyboard adminKeyboard = new AdminKeyboard();
 
-        //main inline keyboard
+            // if (user.Role == "Admin")
+            // {
+            //     // Show admin menu
+            // }
+            // else
+            // {
+                await userQuizKeyboard.ChooseSubject(client, update);
+           // }
+        }
     }
 }
