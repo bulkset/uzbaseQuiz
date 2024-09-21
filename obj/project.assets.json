@@ -629,7 +629,7 @@
       ]
     },
     "Telegram.Bot/21.11.0": {
-      "sha512": "lbyRvBmwymluMlXc0HDclJEJuRKtrnGv+5h5oqIOle5Z2DLc20K/bvFVvrPFC/DEAephOEuPaHFf4LXySd2XOw==",
+      "sha512": "Oa7Jo2dvSYYUMLL0CT8mTSyAtII2Vnn6F+t7N1Wm4XJYgZ1NIbbNeo3EjhM6CBUONUMBpu8fyDpJM8dqdmPedw==",
       "type": "package",
       "path": "telegram.bot/21.11.0",
       "files": [
@@ -654,19 +654,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\user\\.nuget\\packages\\": {}
+    "C:\\Users\\1\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\user\\source\\repos\\uzbaseQuiz\\uzbaseQuiz.csproj",
+      "projectUniqueName": "C:\\Users\\1\\Documents\\GitHub\\uzbaseQuiz\\uzbaseQuiz.csproj",
       "projectName": "uzbaseQuiz",
-      "projectPath": "C:\\Users\\user\\source\\repos\\uzbaseQuiz\\uzbaseQuiz.csproj",
-      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\user\\source\\repos\\uzbaseQuiz\\obj\\",
+      "projectPath": "C:\\Users\\1\\Documents\\GitHub\\uzbaseQuiz\\uzbaseQuiz.csproj",
+      "packagesPath": "C:\\Users\\1\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\1\\Documents\\GitHub\\uzbaseQuiz\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\1\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -676,7 +681,7 @@
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {},
-        "https://nuget.voids.site/v3/index.json": {}
+        "https://pkgs.dev.azure.com/tgbots/Telegram.Bot/_packaging/release/nuget/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
@@ -724,8 +729,16 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file C:\\Users\\1\\Documents\\GitHub\\uzbaseQuiz\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }
