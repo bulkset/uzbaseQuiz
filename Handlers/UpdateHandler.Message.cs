@@ -28,6 +28,7 @@ namespace uzbaseQuiz.Handlers
 
             try
             {
+
                 if (message.ReplyToMessage != null && message.ReplyToMessage.Text.Contains("Add a new subject:"))
                 {
                     var subjectName = message.Text;
@@ -36,25 +37,19 @@ namespace uzbaseQuiz.Handlers
                     Subject subject = await subjectRepository.SaveSubject(newSubject);
                     await client.SendTextMessageAsync(chatId, $"Subject '{subjectName}' added.");
                 }
-                else if (message.ReplyToMessage != null)
+                else if (message.ReplyToMessage.Text.Contains("Enter a new item name:"))
                 {
-                    var previousMessageText = message.ReplyToMessage.Text;
-
-                    if (previousMessageText.Contains("Enter a new item name:"))
+                    var newSubjectName = message.Text;
+                    Subject subject = await subjectRepository.FindSubjectById(subject_id);
+                    if (subject != null)
                     {
-                        var newSubjectName = message.Text;
-                        var subjectId = int.Parse(previousMessageText.Split(' ')[^1]); // здесь предполагается, что ID был добавлен в текст
-                        Subject subject = await subjectRepository.FindSubjectById(subjectId);
-                        if (subject != null)
-                        {
-                            subject.Name = newSubjectName;
-                            await subjectRepository.UpdateSubject(subject);
-                            await client.SendTextMessageAsync(chatId, $"Subject '{subject.Name}' updated successfully.");
-                        }
-                        else
-                        {
-                            await client.SendTextMessageAsync(chatId, $"Subject with ID {subjectId} not found.");
-                        }
+                        subject.Name = newSubjectName;
+                        await subjectRepository.UpdateSubject(subject);
+                        await client.SendTextMessageAsync(chatId, $"Subject '{subject.Name}' updated successfully.");
+                    }
+                    else
+                    {
+                        await client.SendTextMessageAsync(chatId, $"Subject with ID {subject_id} not found.");
                     }
                 }
 
