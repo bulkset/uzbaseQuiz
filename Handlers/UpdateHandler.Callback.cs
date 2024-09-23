@@ -120,6 +120,18 @@ namespace uzbaseQuiz.Handlers
                     await client.SendTextMessageAsync(chatId, $"Subject with ID {subjectId} not found.");
                 }
             }
+            else if (data.StartsWith("confirm_delete_subject_"))
+            {
+                var subjectId = int.Parse(data.Split('_')[3]);
+                Subject subject = await subjectRepository.FindSubjectById(subjectId);
+                if(subject != null){
+                subjectRepository.DeleteSubject(subjectId);
+                client.SendTextMessageAsync(chatId, $"Subject with name '{subject.Name}' deleted");
+                }
+                else{
+                    client.SendTextMessageAsync(chatId, $"Cannot delete subject with name '{subject.Name}' !");
+                }
+            }
         }
 
     }
