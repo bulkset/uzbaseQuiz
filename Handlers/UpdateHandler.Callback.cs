@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -5,6 +9,7 @@ using uzbaseQuiz.Configurations;
 using uzbaseQuiz.Keyboards;
 using uzbaseQuiz.Repositories;
 using uzbaseQuiz.Models;
+
 namespace uzbaseQuiz.Handlers
 {
     public partial class UpdateHandler
@@ -19,18 +24,18 @@ namespace uzbaseQuiz.Handlers
 
         private async Task HandleCallbackQueryAsync(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
         {
-
-            var data = update.CallbackQuery.Data;
+            var callbackQuery = update.CallbackQuery;
+            var data = callbackQuery.Data;
             long chatId = update.CallbackQuery.Message.Chat.Id;
+            int messageId = callbackQuery.Message.MessageId;  // Получаем ID сообщения с кнопками
             ISubjectRepository subjectRepository = new SubjectRepository(Configuration.ConnectionString);
+
             switch (data)
             {
                 case "export_users_excel":
-                    // TODO: logic to export users to Excel
                     await client.SendTextMessageAsync(chatId, "Exporting users to Excel...");
                     break;
                 case "export_tests_pdf":
-                    // TODO: logic to export tests to PDF
                     await client.SendTextMessageAsync(chatId, "Exporting tests to PDF...");
                     break;
                 case "manage_subjects":
@@ -75,20 +80,18 @@ namespace uzbaseQuiz.Handlers
                     await client.SendTextMessageAsync(chatId, "Back to Admin Menu", replyMarkup: AdminKeyboard.GetAdminMenu());
                     break;
                 case "add_test":
-                    // TODO: logic to add a new test
                     await client.SendTextMessageAsync(chatId, "Adding a new test...");
                     break;
                 case "edit_test":
-                    // TODO: logic to edit a test
                     await client.SendTextMessageAsync(chatId, "Editing a test...");
                     break;
                 case "delete_test":
-                    // TODO: logic to delete a test
                     await client.SendTextMessageAsync(chatId, "Deleting a test...");
                     break;
                 default:
                     break;
             }
+
             if (data.StartsWith("edit_subject_"))
             {
                 var subjectId = int.Parse(data.Split('_')[2]);
@@ -102,6 +105,9 @@ namespace uzbaseQuiz.Handlers
                 {
                     await client.SendTextMessageAsync(chatId, $"Subject with ID {subjectId} not found.");
                 }
+
+                // Удаление сообщения после выбора действия
+                await client.DeleteMessageAsync(chatId, messageId);
             }
             else if (data.StartsWith("delete_subject_"))
             {
@@ -111,28 +117,37 @@ namespace uzbaseQuiz.Handlers
                 {
                     await client.SendTextMessageAsync(chatId, $"Are you sure you want to delete the item? '{subject.Name}'?", replyMarkup: new InlineKeyboardMarkup(new[]
                     {
-                InlineKeyboardButton.WithCallbackData("Yes", $"confirm_delete_subject_{subjectId}"),
-                InlineKeyboardButton.WithCallbackData("No", $"cancel_delete_subject")
-            }));
+                        InlineKeyboardButton.WithCallbackData("Yes", $"confirm_delete_subject_{subjectId}"),
+                        InlineKeyboardButton.WithCallbackData("No", $"cancel_delete_subject")
+                    }));
                 }
                 else
                 {
                     await client.SendTextMessageAsync(chatId, $"Subject with ID {subjectId} not found.");
                 }
+
+                // Удаление сообщения после выбора действия
+                await client.DeleteMessageAsync(chatId, messageId);
             }
             else if (data.StartsWith("confirm_delete_subject_"))
             {
                 var subjectId = int.Parse(data.Split('_')[3]);
                 Subject subject = await subjectRepository.FindSubjectById(subjectId);
-                if(subject != null){
-                subjectRepository.DeleteSubject(subjectId);
-                client.SendTextMessageAsync(chatId, $"Subject with name '{subject.Name}' deleted");
+                if (subject != null)
+                {
+                    subjectRepository.DeleteSubject(subjectId);
+                    await client.SendTextMessageAsync(chatId, $"Subject with name '{subject.Name}' deleted");
+                    await client.SendTextMessageAsync(chatId, "Back to Admin Menu", replyMarkup: AdminKeyboard.GetAdminMenu());
+
                 }
-                else{
-                    client.SendTextMessageAsync(chatId, $"Cannot delete subject with name '{subject.Name}' !");
+                else
+                {
+                    await client.SendTextMessageAsync(chatId, $"Cannot delete subject with name '{subject.Name}' !");
                 }
+
+                // Удаление сообщения после выбора действия
+                await client.DeleteMessageAsync(chatId, messageId);
             }
         }
-
     }
 }

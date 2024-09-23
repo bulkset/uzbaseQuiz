@@ -36,6 +36,8 @@ namespace uzbaseQuiz.Handlers
                     var newSubject = new Subject { Name = subjectName, MaxScore = 100 };
                     Subject subject = await subjectRepository.SaveSubject(newSubject);
                     await client.SendTextMessageAsync(chatId, $"Subject '{subjectName}' added.");
+                    await client.SendTextMessageAsync(chatId, "Back to Admin Menu", replyMarkup: AdminKeyboard.GetAdminMenu());
+
                 }
                 else if (message.ReplyToMessage.Text.Contains("Enter a new item name:"))
                 {
@@ -46,6 +48,8 @@ namespace uzbaseQuiz.Handlers
                         subject.Name = newSubjectName;
                         await subjectRepository.UpdateSubject(subject);
                         await client.SendTextMessageAsync(chatId, $"Subject '{subject.Name}' updated successfully.");
+                        await client.SendTextMessageAsync(chatId, "Back to Admin Menu", replyMarkup: AdminKeyboard.GetAdminMenu());
+
                     }
                     else
                     {
