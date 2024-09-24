@@ -1,14 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "2rOMXudGgtrzOqWQoVRUtRqCXV2SDwCqBKExQKdvvyNPAHKF1YzNjqdfK4jVqGDN8m8XVai5qja7LioIdP5r9A==",
+  "dgSpecHash": "e6cuVQIYX9w=",
   "success": true,
-  "projectFilePath": "/Users/chupapa/Documents/vscode/uzbaseQuiz/uzbaseQuiz.csproj",
+  "projectFilePath": "C:\\Users\\1\\Documents\\GitHub\\uzbaseQuiz\\uzbaseQuiz.csproj",
   "expectedPackageFiles": [
-    "/Users/chupapa/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
-    "/Users/chupapa/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.0/microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
-    "/Users/chupapa/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512",
-    "/Users/chupapa/.nuget/packages/npgsql/8.0.4/npgsql.8.0.4.nupkg.sha512",
-    "/Users/chupapa/.nuget/packages/telegram.bot/19.0.0/telegram.bot.19.0.0.nupkg.sha512"
+    "C:\\Users\\1\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\1\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.0\\microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\1\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\1\\.nuget\\packages\\npgsql\\8.0.4\\npgsql.8.0.4.nupkg.sha512",
+    "C:\\Users\\1\\.nuget\\packages\\telegram.bot\\19.0.0\\telegram.bot.19.0.0.nupkg.sha512"
   ],
   "logs": []
 }
