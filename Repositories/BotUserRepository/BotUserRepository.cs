@@ -6,39 +6,40 @@ using System.Threading.Tasks;
 
 namespace uzbaseQuiz.Repositories
 {
-    public class UserAnswerRepository
+    public class BotUserRepository
     {
         private readonly NpgsqlConnection _npgsqlConnection;
 
-        public UserAnswerRepository(string connectionString)
+        public BotUserRepository(string connectionString)
         {
             _npgsqlConnection = new NpgsqlConnection(connectionString);
         }
 
-        // Save UserAnswer
-        public async Task<UserAnswer> SaveUserAnswerAsync(UserAnswer userAnswer)
+        // Save BotUser
+        public async Task<BotUser> SaveBotUserAsync(BotUser botUser)
         {
             var sqlQuery = @"
-                INSERT INTO user_answers (user_test_id, question_id, answer_id, is_correct) 
-                VALUES (@userTestId, @questionId, @answerId, @isCorrect) 
+                INSERT INTO bot_users (name, phone_number, role, created_at, user_id) 
+                VALUES (@name, @phoneNumber, @role, @createdAt, @userId) 
                 RETURNING id;";
 
             await using (var command = new NpgsqlCommand(sqlQuery, _npgsqlConnection))
             {
-                command.Parameters.AddWithValue("@userTestId", userAnswer.UserTestId);
-                command.Parameters.AddWithValue("@questionId", userAnswer.QuestionId);
-                command.Parameters.AddWithValue("@answerId", userAnswer.AnswerId);
-                command.Parameters.AddWithValue("@isCorrect", userAnswer.IsCorrect);
+                command.Parameters.AddWithValue("@name", botUser.Name);
+                command.Parameters.AddWithValue("@phoneNumber", botUser.PhoneNumber);
+                command.Parameters.AddWithValue("@role", botUser.Role);
+                command.Parameters.AddWithValue("@createdAt", botUser.CreatedAt);
+                command.Parameters.AddWithValue("@userId", botUser.user_id);
 
                 try
                 {
                     await _npgsqlConnection.OpenAsync();
                     var newId = await command.ExecuteScalarAsync();
-                    userAnswer.Id = Convert.ToInt32(newId);
+                    botUser.Id = Convert.ToInt32(newId);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error saving user answer: {ex.Message}");
+                    Console.WriteLine($"Error saving bot user: {ex.Message}");
                 }
                 finally
                 {
@@ -49,13 +50,13 @@ namespace uzbaseQuiz.Repositories
                 }
             }
 
-            return userAnswer;
+            return botUser;
         }
 
-        // Find UserAnswer by Id
-        public async Task<UserAnswer> FindUserAnswerByIdAsync(int id)
+        // Find BotUser by Id
+        public async Task<BotUser> FindBotUserByIdAsync(int id)
         {
-            var sqlQuery = "SELECT * FROM user_answers WHERE id = @id";
+            var sqlQuery = "SELECT * FROM bot_users WHERE id = @id";
 
             await using (var command = new NpgsqlCommand(sqlQuery, _npgsqlConnection))
             {
@@ -68,20 +69,21 @@ namespace uzbaseQuiz.Repositories
                     {
                         if (await reader.ReadAsync())
                         {
-                            return new UserAnswer
+                            return new BotUser
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("id")),
-                                UserTestId = reader.GetInt32(reader.GetOrdinal("user_test_id")),
-                                QuestionId = reader.GetInt32(reader.GetOrdinal("question_id")),
-                                AnswerId = reader.GetInt32(reader.GetOrdinal("answer_id")),
-                                IsCorrect = reader.GetBoolean(reader.GetOrdinal("is_correct"))
+                                Name = reader.GetString(reader.GetOrdinal("name")),
+                                PhoneNumber = reader.GetString(reader.GetOrdinal("phone_number")),
+                                Role = reader.GetString(reader.GetOrdinal("role")),
+                                CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
+                                user_id = reader.GetInt64(reader.GetOrdinal("user_id"))
                             };
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error finding user answer: {ex.Message}");
+                    Console.WriteLine($"Error finding bot user: {ex.Message}");
                 }
                 finally
                 {
@@ -95,11 +97,11 @@ namespace uzbaseQuiz.Repositories
             return null;
         }
 
-        // Get all UserAnswers
-        public async Task<List<UserAnswer>> GetAllUserAnswersAsync()
+        // Get all BotUsers
+        public async Task<List<BotUser>> GetAllBotUsersAsync()
         {
-            var sqlQuery = "SELECT * FROM user_answers";
-            var userAnswers = new List<UserAnswer>();
+            var sqlQuery = "SELECT * FROM bot_users";
+            var botUsers = new List<BotUser>();
 
             await using (var command = new NpgsqlCommand(sqlQuery, _npgsqlConnection))
             {
@@ -110,20 +112,21 @@ namespace uzbaseQuiz.Repositories
                     {
                         while (await reader.ReadAsync())
                         {
-                            userAnswers.Add(new UserAnswer
+                            botUsers.Add(new BotUser
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("id")),
-                                UserTestId = reader.GetInt32(reader.GetOrdinal("user_test_id")),
-                                QuestionId = reader.GetInt32(reader.GetOrdinal("question_id")),
-                                AnswerId = reader.GetInt32(reader.GetOrdinal("answer_id")),
-                                IsCorrect = reader.GetBoolean(reader.GetOrdinal("is_correct"))
+                                Name = reader.GetString(reader.GetOrdinal("name")),
+                                PhoneNumber = reader.GetString(reader.GetOrdinal("phone_number")),
+                                Role = reader.GetString(reader.GetOrdinal("role")),
+                                CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
+                                user_id = reader.GetInt64(reader.GetOrdinal("user_id"))
                             });
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error getting all user answers: {ex.Message}");
+                    Console.WriteLine($"Error getting all bot users: {ex.Message}");
                 }
                 finally
                 {
@@ -134,25 +137,26 @@ namespace uzbaseQuiz.Repositories
                 }
             }
 
-            return userAnswers;
+            return botUsers;
         }
 
-        // Update UserAnswer
-        public async Task<UserAnswer> UpdateUserAnswerAsync(UserAnswer userAnswer)
+        // Update BotUser
+        public async Task<BotUser> UpdateBotUserAsync(BotUser botUser)
         {
             var sqlQuery = @"
-                UPDATE user_answers
-                SET user_test_id = @userTestId, question_id = @questionId, answer_id = @answerId, is_correct = @isCorrect
+                UPDATE bot_users
+                SET name = @name, phone_number = @phoneNumber, role = @role, created_at = @createdAt, user_id = @userId
                 WHERE id = @id
                 RETURNING id;";
 
             await using (var command = new NpgsqlCommand(sqlQuery, _npgsqlConnection))
             {
-                command.Parameters.AddWithValue("@id", userAnswer.Id);
-                command.Parameters.AddWithValue("@userTestId", userAnswer.UserTestId);
-                command.Parameters.AddWithValue("@questionId", userAnswer.QuestionId);
-                command.Parameters.AddWithValue("@answerId", userAnswer.AnswerId);
-                command.Parameters.AddWithValue("@isCorrect", userAnswer.IsCorrect);
+                command.Parameters.AddWithValue("@id", botUser.Id);
+                command.Parameters.AddWithValue("@name", botUser.Name);
+                command.Parameters.AddWithValue("@phoneNumber", botUser.PhoneNumber);
+                command.Parameters.AddWithValue("@role", botUser.Role);
+                command.Parameters.AddWithValue("@createdAt", botUser.CreatedAt);
+                command.Parameters.AddWithValue("@userId", botUser.user_id);
 
                 try
                 {
@@ -160,12 +164,12 @@ namespace uzbaseQuiz.Repositories
                     var updatedId = await command.ExecuteScalarAsync();
                     if (updatedId != null)
                     {
-                        return userAnswer;
+                        return botUser;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error updating user answer: {ex.Message}");
+                    Console.WriteLine($"Error updating bot user: {ex.Message}");
                 }
                 finally
                 {
@@ -179,10 +183,10 @@ namespace uzbaseQuiz.Repositories
             return null;
         }
 
-        // Delete UserAnswer
-        public async Task<int> DeleteUserAnswerAsync(int id)
+        // Delete BotUser
+        public async Task<int> DeleteBotUserAsync(int id)
         {
-            var sqlQuery = "DELETE FROM user_answers WHERE id = @id";
+            var sqlQuery = "DELETE FROM bot_users WHERE id = @id";
 
             await using (var command = new NpgsqlCommand(sqlQuery, _npgsqlConnection))
             {
@@ -199,7 +203,7 @@ namespace uzbaseQuiz.Repositories
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error deleting user answer: {ex.Message}");
+                    Console.WriteLine($"Error deleting bot user: {ex.Message}");
                 }
                 finally
                 {
@@ -210,7 +214,7 @@ namespace uzbaseQuiz.Repositories
                 }
             }
 
-            throw new Exception("User answer deletion failed.");
+            throw new Exception("Bot user deletion failed.");
         }
     }
 }

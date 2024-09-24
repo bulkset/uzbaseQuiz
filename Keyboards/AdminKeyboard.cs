@@ -44,13 +44,35 @@ namespace uzbaseQuiz.Keyboards
             {
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("➕ Add New Test", "add_test"),
-                    InlineKeyboardButton.WithCallbackData("✏️ Edit Test", "edit_test"),
+                    InlineKeyboardButton.WithCallbackData("➕ Add New Question", "add_question"),
+                    InlineKeyboardButton.WithCallbackData("✏️ Edit Question", "edit_question"),
+                    InlineKeyboardButton.WithCallbackData("❌ Delete Question", "delete_question"),
                 },
                 new[]
                 {
+                    InlineKeyboardButton.WithCallbackData("➕ Add New Test", "add_test"),
+                    InlineKeyboardButton.WithCallbackData("✏️ Edit Test", "edit_test"),
                     InlineKeyboardButton.WithCallbackData("❌ Delete Test", "delete_test"),
+                },
+                new[]
+                {
                     InlineKeyboardButton.WithCallbackData("🔙 Back to Admin Menu", "back_admin_menu")
+                }
+            });
+        }
+
+        public static InlineKeyboardMarkup GetAnswerManagementMenu(int questionId)
+        {
+            return new InlineKeyboardMarkup(new[]
+            {
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("➕ Add New Answer", $"add_answer_{questionId}"),
+                    InlineKeyboardButton.WithCallbackData("❌ Delete Answer", $"delete_answer_{questionId}")
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("🔙 Back to Test Management", "manage_tests")
                 }
             });
         }
