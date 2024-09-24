@@ -9,3 +9,7 @@ obj/uzbaseQuiz.csproj.nuget.g.props
 bin/Debug/net8.0/uzbaseQuiz.exe
 obj/Debug/net8.0/uzbaseQuiz.AssemblyInfo.cs
 *.cache
+bin/Debug/net8.0/uzbaseQuiz.exe
+bin/Debug/net8.0/uzbaseQuiz.dll
+/bin/Debug/net8.0
+/bin
